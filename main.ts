@@ -45,11 +45,15 @@ const GATE_MAX_CHARS = 200;
 //   - exactly one line (the bounty asks for one joke, one line)
 //   - exactly one sentence, i.e. a single sentence-terminating mark and
 //     that mark is at the end
+// Note: entry.txt is written as LINE exactly, with no trailing newline —
+// so the file's byte/char count is the constant's 105, matching the gate
+// checks above. A trailing newline would change the entry the server reads.
+const SENTENCE_MARKS = /[.!?]/g;
 const chars = [...LINE].length;
 if (chars < GATE_MIN_CHARS || chars > GATE_MAX_CHARS) throw new Error(`entry is ${chars} chars, gate needs ${GATE_MIN_CHARS}–${GATE_MAX_CHARS}`);
 if (!/\S/.test(LINE)) throw new Error('entry is only whitespace');
 if (LINE.includes('\n')) throw new Error('entry must be exactly one line');
-if ((LINE.match(/[.!?]/g) ?? []).length !== 1 || !/[.!?]$/.test(LINE)) {
+if ((LINE.match(SENTENCE_MARKS) ?? []).length !== 1 || !/[.!?]$/.test(LINE)) {
   throw new Error('entry must be exactly one sentence');
 }
 
